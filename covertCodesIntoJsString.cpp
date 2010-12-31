@@ -20,28 +20,18 @@ int main(){
 	}	
 	
 	string quote = "\"";
-//	string escapedQuote = "\\\"";
+	string escapedQuote = "\\\"";
 	int pos;
 	
 	for(int i = 0; i < count; i++){
-		cout<<i;
-//		while(1){
-//			pos = lines[i].find("\"");
-//			cout << pos << endl;
-//			lines[i].replace(pos,1,"\\\"");
-//			
-//			pos != -1;
-			
-//			if(pos == -1){
-//				cout<<"-1!!!!!!!!!!!"<<endl;
-//				break;
-////				lines[i].replace(pos,1,"\\\"");
-//			}
-//			else{
-//				cout<<"0!!!!!!!!!!!!"<<endl;
-//				break;
-//			}
-		}
+		cout<<i<<endl;
+		
+		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+		cout<<"foundquotestate"<<lines[i].find(quote);
 	}
 	
 	
