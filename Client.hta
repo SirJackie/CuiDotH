@@ -9,11 +9,11 @@
             function RunInBackground(command){
                 var ws = new ActiveXObject("WScript.Shell");
                 return ws.Run(command,   //Command
-                              1,         //showWindowOrNot
+                              0,         //showWindowOrNot
                               true);     //waitOnReturnOrNot
             }
             function WriteSharedMemory(name, position, value){
-                RunInBackground(".\\cui.exe " + name + " " + position + " " + value);
+                RunInBackground(".\\cui.exe WRITESM " + name + " " + position + " " + value);
                 alert("Successfully wrote! Shared Memory:" + name + " Position:" + position + " Value:" + value);
             }
             function Write(){
