@@ -56,14 +56,16 @@ void ReadSharedMemory(char* name, int* buffer, int len){
     UnmapViewOfFile(pBuffer);
 }
 
-void ReadPieceOfSharedMemory(char* name, int position, int* returnValue){
+int ReadPieceOfSharedMemory(char* name, int position){
 	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
 	
     LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     
-    *returnValue = ((int*)pBuffer)[position];
+    int returnValue = ((int*)pBuffer)[position];
     
     UnmapViewOfFile(pBuffer);
+    
+    return returnValue;
 }
 
 void WritePieceOfSharedMemory(char* name, int position, int value){
