@@ -13,7 +13,7 @@
             function RunInBackground(command){
                 var ws = new ActiveXObject("WScript.Shell");
                 return ws.Run(command,   //Command
-                              0,         //showWindowOrNot
+                              1,         //showWindowOrNot
                               true);     //waitOnReturnOrNot
             }
             function ReadSharedMemory(name, position){
@@ -41,20 +41,32 @@
                 v.strokeweight="2px";
                 document.getElementById("canvas").appendChild(v);
             }
-            window.onload = function(){
-                setInterval(function(){
-                    while(1){
-                        if(ReadSharedMemory("CuiSM1", 0) == 1){
-                            var x1 = ReadSharedMemory("CuiSM1", 1);
-                            var y1 = ReadSharedMemory("CuiSM1", 2);
-                            var x2 = ReadSharedMemory("CuiSM1", 3);
-                            var y2 = ReadSharedMemory("CuiSM1", 4);
-                            DrawLine(x1, y1, x2, y2);
-                            WriteSharedMemory("CuiSM1", 0, 0);
-                        }
-                    }
-                }, 20);
+
+            function refresh(){
+                var msg = ReadSharedMemory("CuiSM1", 0);
+                if(msg == -1){
+                    //Error or shared memory closed, exit the hta
+                    window.close();
+                    return;   //won't setTimeout
+                }
+                if(msg == 0){
+                    //do nothing
+                }
+                else if(msg == 1){
+                    var x1 = ReadSharedMemory("CuiSM1", 1);
+                    var y1 = ReadSharedMemory("CuiSM1", 2);
+                    var x2 = ReadSharedMemory("CuiSM1", 3);
+                    var y2 = ReadSharedMemory("CuiSM1", 4);
+                    DrawLine(x1, y1, x2, y2);
+                    WriteSharedMemory("CuiSM1", 0, 0);
+                }
+                setTimeout(refresh, 40);
             }
+
+            window.onload = function(){
+                refresh();
+            };
+
         </script>
         Position: <input type="text" id="position">
         Value: <input type="text" id="value">
