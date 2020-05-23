@@ -36,6 +36,10 @@ void CuiInit(int argc, char** argv){
 	}
 }
 
+void CuiExit(){
+	system("taskkill /im mshta.exe /f");
+}
+
 void DrawLine(int x1, int y1, int x2, int y2){
 	WritePieceOfSharedMemory(SMNAME, 1, x1);
 	WritePieceOfSharedMemory(SMNAME, 2, y1);
@@ -49,7 +53,7 @@ void DrawLine(int x1, int y1, int x2, int y2){
 
 int main(int argc, char** argv){
 	CuiInit(argc, argv);    //For Cmd Call
-//	if(CheckIfSharedMemoryExist(SMNAME) == FALSE){
+	printf("%d\n", CheckIfSharedMemoryExist(SMNAME));
 		CreateSharedMemory(SMNAME, 100 * sizeof(int));
 		WritePieceOfSharedMemory(SMNAME, 0, 0);       //initialize
 //		printf("Created Shared Memory"); 
@@ -62,4 +66,5 @@ int main(int argc, char** argv){
 	printf("Drew!"); 
 	
 	getchar();
+	CuiExit();
 }
