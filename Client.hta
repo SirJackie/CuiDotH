@@ -2,7 +2,7 @@
 <html xmlns:v= "urn:schemas-microsoft-com:vml ">
     <head>
         <title>Client</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" charset="utf-8" />
         <style>
         v\:*{behavior:url(#default#VML);}
         </style>
@@ -10,6 +10,7 @@
     <body>
         <h1>Hello,world!</h1>
         <script>
+            var continueRefreshOrNot = true;
             function RunInBackground(command){
                 var ws = new ActiveXObject("WScript.Shell");
                 return ws.Run(command,   //Command
@@ -43,6 +44,9 @@
             }
 
             function refresh(){
+                if(continueRefreshOrNot == false){
+                    return;   //don't refresh and don't setTimeout
+                }
                 var msg = ReadSharedMemory("CuiSM1", 0);
                 if(msg == -1){
                     //Error or shared memory closed, exit the hta
@@ -64,8 +68,19 @@
             }
 
             window.onload = function(){
-                refresh();
+                setTimeout(refresh, 40);
             };
+
+
+            window.onbeforeunload=onclose;
+            function onclose()
+            {
+                if(event.clientX>document.body.clientWidth&&event.clientY<0||event.altKey)
+                {
+                    continueRefreshOrNot = false;
+                    // return "您要离开吗？";
+                }
+            }
 
         </script>
         Position: <input type="text" id="position">

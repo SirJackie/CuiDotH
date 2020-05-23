@@ -1,0 +1,10 @@
+<script type="text/javascript">
+window.onbeforeunload=onclose;
+function onclose()
+{
+if(event.clientX>document.body.clientWidth&&event.clientY<0||event.altKey)
+{
+return "您要离开吗？";
+}
+}
+</script>
