@@ -21,7 +21,6 @@ void CuiInit(int argc, char** argv){
 	}
 	
 	if(strcmp(argv[1], "READSM") == 0){
-		printf("Mode: READSM\n");
 		if(!CheckIfSharedMemoryExist(argv[2])){
 			printf("Error! Shared Memory Doesn't Even Exist!!!");
 			PostQuitMessage(0);
@@ -31,7 +30,6 @@ void CuiInit(int argc, char** argv){
 	}
 	
 	if(strcmp(argv[1], "WRITESM") == 0){
-		printf("Mode: WRITESM\n");
 		if(!CheckIfSharedMemoryExist(argv[2])){
 			printf("Error! Shared Memory Doesn't Even Exist!!!");
 			exit(0);
