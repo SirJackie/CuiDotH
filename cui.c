@@ -27,16 +27,17 @@ void CuiInit(int argc, char** argv){
 			PostQuitMessage(0);
 		}
 		ReadPieceOfSharedMemory(argv[2], atoi(argv[3]), &returnValue);
-		PostQuitMessage(returnValue);
+		exit(returnValue);
 	}
 	
 	if(strcmp(argv[1], "WRITESM") == 0){
-		printf("Mode: READSM\n");
+		printf("Mode: WRITESM\n");
 		if(!CheckIfSharedMemoryExist(argv[2])){
 			printf("Error! Shared Memory Doesn't Even Exist!!!");
-			PostQuitMessage(0);
+			exit(0);
 		}
 		WritePieceOfSharedMemory(argv[2], atoi(argv[3]), atoi(argv[4]));
+		exit(0);
 	}
 }
 
