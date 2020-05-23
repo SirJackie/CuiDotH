@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v= "urn:schemas-microsoft-com:vml ">
     <head>
         <title>Client</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <style>
+        v\:*{behavior:url(#default#VML);}
+        </style>
     </head>
     <body>
         <h1>Hello,world!</h1>
@@ -17,7 +21,7 @@
             }
             function WriteSharedMemory(name, position, value){
                 RunInBackground(".\\cui.exe WRITESM " + name + " " + position + " " + value);
-                alert("Wrote!");
+                // alert("Wrote!");
             }
             function Read(){
                 var position = document.getElementById("position");
@@ -29,10 +33,33 @@
                 var value = document.getElementById("value");
                 WriteSharedMemory("CuiSM1", position.value, value.value);
             }
+            function DrawLine(x1, y1, x2, y2){
+                var v = document.createElement("<v:line></v:line>");
+                v.from = x1 + "," + y1;
+                v.to   = x2 + "," + y2;
+                v.strokecolor="black";
+                v.strokeweight="2px";
+                document.getElementById("canvas").appendChild(v);
+            }
+            window.onload = function(){
+                setInterval(function(){
+                    while(1){
+                        if(ReadSharedMemory("CuiSM1", 0) == 1){
+                            var x1 = ReadSharedMemory("CuiSM1", 1);
+                            var y1 = ReadSharedMemory("CuiSM1", 2);
+                            var x2 = ReadSharedMemory("CuiSM1", 3);
+                            var y2 = ReadSharedMemory("CuiSM1", 4);
+                            DrawLine(x1, y1, x2, y2);
+                            WriteSharedMemory("CuiSM1", 0, 0);
+                        }
+                    }
+                }, 1);
+            }
         </script>
         Position: <input type="text" id="position">
         Value: <input type="text" id="value">
         <button onclick="Read()">Read</button>
         <button onclick="Write()">Write</button>
+        <div id="canvas" style="position:absolute;top:0;left:0;"></div>
     </body>
 </html>
