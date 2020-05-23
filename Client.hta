@@ -8,32 +8,32 @@
         </style>
     </head>
     <body>
-        <h1>Hello,world!</h1>
+        <div id="canvas" style="position:absolute;top:0;left:0;"></div>
         <script>
-            var continueRefreshOrNot = true;
+
+            /*
+            ** Tool Functions
+            */
+
             function RunInBackground(command){
                 var ws = new ActiveXObject("WScript.Shell");
                 return ws.Run(command,   //Command
-                              1,         //showWindowOrNot
+                              0,         //showWindowOrNot
                               true);     //waitOnReturnOrNot
             }
+
             function ReadSharedMemory(name, position){
                 return RunInBackground(".\\cui.exe READSM " + name + " " + position);
             }
+
             function WriteSharedMemory(name, position, value){
                 RunInBackground(".\\cui.exe WRITESM " + name + " " + position + " " + value);
-                // alert("Wrote!");
             }
-            function Read(){
-                var position = document.getElementById("position");
-                var value = document.getElementById("value");
-                value.value = ReadSharedMemory("CuiSM1", position.value);
-            }
-            function Write(){
-                var position = document.getElementById("position");
-                var value = document.getElementById("value");
-                WriteSharedMemory("CuiSM1", position.value, value.value);
-            }
+
+            /*
+            ** Drawing Functions
+            */
+
             function DrawLine(x1, y1, x2, y2){
                 var v = document.createElement("<v:line></v:line>");
                 v.from = x1 + "," + y1;
@@ -43,20 +43,32 @@
                 document.getElementById("canvas").appendChild(v);
             }
 
+            /*
+            ** Main Functions
+            */
+
+            var continueRefreshOrNot = true;
             function refresh(){
                 if(continueRefreshOrNot == false){
-                    return;   //don't refresh and don't setTimeout
+                    return;   //Won't refresh and won't setTimeout
                 }
+
                 var msg = ReadSharedMemory("CuiSM1", 0);
-                if(msg == -1){
+
+                if(msg == 0){
+                    //Do nothing
+                }
+                else if(msg == -1){
                     //Error or shared memory closed, exit the hta
                     window.close();
-                    return;   //won't setTimeout
+                    return;   //Won't refresh and won't setTimeout
                 }
-                if(msg == 0){
-                    //do nothing
+                else if(msg == -2){
+                    //HeartBeat Testing
+                    WriteSharedMemory("CuiSM1", 0, 0);
                 }
                 else if(msg == 1){
+                    //DrawLine()
                     var x1 = ReadSharedMemory("CuiSM1", 1);
                     var y1 = ReadSharedMemory("CuiSM1", 2);
                     var x2 = ReadSharedMemory("CuiSM1", 3);
@@ -72,21 +84,18 @@
             };
 
 
-            window.onbeforeunload=onclose;
-            function onclose()
+            
+            function OnClose()
             {
                 if(event.clientX>document.body.clientWidth&&event.clientY<0||event.altKey)
                 {
                     continueRefreshOrNot = false;
-                    // return "您要离开吗？";
+                    // return "message";
                 }
             }
 
+            window.onbeforeunload=OnClose;
+
         </script>
-        Position: <input type="text" id="position">
-        Value: <input type="text" id="value">
-        <button onclick="Read()">Read</button>
-        <button onclick="Write()">Write</button>
-        <div id="canvas" style="position:absolute;top:0;left:0;"></div>
     </body>
 </html>
