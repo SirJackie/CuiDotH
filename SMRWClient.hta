@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Client</title>
+    </head>
+    <body>
+        <h1>Hello,world!</h1>
+        <script>
+            function RunInBackground(command){
+                var ws = new ActiveXObject("WScript.Shell");
+                return ws.Run(command,   //Command
+                              0,         //showWindowOrNot
+                              true);     //waitOnReturnOrNot
+            }
+            function ReadSharedMemory(name, position){
+                return RunInBackground(".\\cui.exe READSM " + name + " " + position);
+            }
+            function WriteSharedMemory(name, position, value){
+                RunInBackground(".\\cui.exe WRITESM " + name + " " + position + " " + value);
+                alert("Wrote!");
+            }
+            function Read(){
+                var position = document.getElementById("position");
+                var value = document.getElementById("value");
+                value.value = ReadSharedMemory("CuiSM1", position.value);
+            }
+            function Write(){
+                var position = document.getElementById("position");
+                var value = document.getElementById("value");
+                WriteSharedMemory("CuiSM1", position.value, value.value);
+            }
+        </script>
+        Position: <input type="text" id="position">
+        Value: <input type="text" id="value">
+        <button onclick="Read()">Read</button>
+        <button onclick="Write()">Write</button>
+    </body>
+</html>
