@@ -13,10 +13,10 @@
             var oExcel = new ActiveXObject("Excel.Application");
             var oBook = oExcel.Workbooks.Add();
             var oModule = oBook.VBProject.VBComponents.Add(1);
-            var strCode = "Private Declare Function SetCursorPos Lib \"user32\" (ByVal x As Long, ByVal y As Long) As Long\nFunction MyMacro(x as Long, y as Long)\nSetCursorPos x, y\nEnd Function";
+            var strCode = "Function A(X)\nA = X * 10\nEnd Function";
             oModule.CodeModule.AddFromString(strCode);
 
-            oExcel.Run("MyMacro", 0, 0);
+            alert(oExcel.Run("A", 123));
 
             oExcel.DisplayAlerts = false;
             oBook.Close();
