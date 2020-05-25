@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>hi</title>
+    </head>
+    <body id="body">
+        <script>
+            // var WshShell = new ActiveXObject("wscript.Shell");
+            // WshShell.RegWrite("HKEY_CURRENT_USER\Software\Microsoft\Office\11.0\Excel\Security\AccessVBOM",1,"REG_DWORD");
+            // WshShell.RegWrite("HKEY_CURRENT_USER\Software\Microsoft\Office\12.0\Excel\Security\AccessVBOM",1,"REG_DWORD");
+            // WshShell.RegWrite("HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Security\AccessVBOM",1,"REG_DWORD");
+
+            var oExcel = new ActiveXObject("Excel.Application");
+            var oBook = oExcel.Workbooks.Add();
+            var oModule = oBook.VBProject.VBComponents.Add(1);
+            var strCode = "Private Declare Function SetCursorPos Lib \"user32\" (ByVal x As Long, ByVal y As Long) As Long\nFunction MyMacro(x as Long, y as Long)\nSetCursorPos x, y\nMyMacro = x + y\nEnd Function";
+            oModule.CodeModule.AddFromString(strCode);
+            var result = oExcel.Run("MyMacro",0,0);
+            alert(result);
+            oExcel.DisplayAlerts = false;
+            oBook.Close();
+            oExcel.Quit();
+        </script>
+    </body>
+</html>
