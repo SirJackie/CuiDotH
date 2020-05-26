@@ -10,13 +10,41 @@
             // WshShell.RegWrite("HKEY_CURRENT_USER\Software\Microsoft\Office\12.0\Excel\Security\AccessVBOM",1,"REG_DWORD");
             // WshShell.RegWrite("HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Security\AccessVBOM",1,"REG_DWORD");
 
+
+            // Sub 按钮1_Click()
+
+            //     ' 创建管道
+            //     pipe = CreateSM("CuiSM1")
+                
+            //     ' 读取初始值
+            //     MsgBox (ReadSM(pipe, 0))
+                
+            //     ' 写入值123
+            //     MsgBox (WriteSM(pipe, 0, 123))
+                
+            //     ' 检查是否写入
+            //     MsgBox (ReadSM(pipe, 0))
+                
+            //     ' 关闭管道
+            //     CloseSM (pipe)
+            //     MsgBox ("SM Closed!")
+                
+            // End Sub
+
+
+
             var oExcel = new ActiveXObject("Excel.Application");
             var oBook = oExcel.Workbooks.Add();
             var oModule = oBook.VBProject.VBComponents.Add(1);
-            var strCode = "Private Declare Function SetCursorPos Lib \"user32\" (ByVal x As Long, ByVal y As Long) As Long\nFunction MyMacro(x as Long, y as Long)\nSetCursorPos x, y\nMyMacro = x * y\nEnd Function";
+            var strCode = "Public Const PAGE_READWRITE = 4\nPublic Const FILE_MAP_WRITE = 2\nPublic Const ERROR_ALREADY_EXISTS = 183&\nPublic Const ERROR_BAD_ARGUMENTS = 160&\nPublic Const ERROR_INVALID_DATA = 13&\nPublic Const GWL_USERDATA = (-21&)\nPublic Const WM_SETTEXT = &HC\nPublic Const WM_USER = &H400\nPublic Const GWL_WNDPROC = (-4)\nPublic preWndProc As Long\nPublic Declare Function CallWindowProc Lib \"user32\" Alias \"CallWindowProcA\" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long\nPublic Declare Function IsWindowVisible Lib \"user32\" (ByVal hwnd As Long) As Long\nPublic Declare Function ShowWindow Lib \"user32\" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long\nPublic Declare Function SetfrmFocus Lib \"user32\" Alias \"SetFocus\" (ByVal hwnd As Long) As Long\nPublic Declare Function FindWindow Lib \"user32\" Alias \"FindWindowA\" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long\nPublic Declare Function PostMessage Lib \"user32\" Alias \"PostMessageA\" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long\nPublic Declare Function SendMessage Lib \"user32\" Alias \"SendMessageA\" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long\nPublic Declare Function GetWindowLong Lib \"user32\" Alias \"GetWindowLongA\" (ByVal hwnd As Long, ByVal nIndex As Long) As Long\nPublic Declare Function SetWindowLong Lib \"user32\" Alias \"SetWindowLongA\" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long\nPublic Declare Function SetWindowText Lib \"user32\" Alias \"SetWindowTextA\" (ByVal hwnd As Long, ByVal lpString As String) As Long\nPublic Declare Function FindWindowEx Lib \"user32\" Alias \"FindWindowExA\" (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, ByVal lpsz2 As String) As Long\nPublic Declare Function CreateFileMapping Lib \"kernel32\" Alias \"CreateFileMappingA\" (ByVal hFile As Long, lpFileMappigAttributes As Any, ByVal flProtect As Long, ByVal dwMaximumSizeHigh As Long, ByVal dwMaximumSizeLow As Long, ByVal lpName As String) As Long\nPublic Declare Function CloseHandle Lib \"kernel32\" (ByVal hObject As Long) As Long\nPublic Declare Function MapViewOfFile Lib \"kernel32\" (ByVal hFileMappingObject As Long, ByVal dwDesiredAccess As Long, ByVal dwFileOffsetHigh As Long, ByVal dwFileOffsetLow As Long, ByVal dwNumberOfBytesToMap As Long) As Long\nPublic Declare Function UnmapViewOfFile Lib \"kernel32\" (lpBaseAddress As Any) As Long\nPublic Declare Sub CopyMemory Lib \"kernel32\" Alias \"RtlMoveMemory\" (Destination As Any, Source As Any, ByVal length As Long)\nPublic Declare Sub CopyMemoryToStr Lib \"kernel32\" Alias \"RtlMoveMemory\" (ByVal strDst As String, pScr As Long, ByVal length As Long)\nPublic Declare Sub CopyMemoryStr Lib \"kernel32\" Alias \"RtlMoveMemory\" (strDst As Long, ByVal pScr As String, ByVal length As Long)\nPublic pipe As Long ' 内存映射句柄\nPublic pBuffer As Long  ' 内存映射Buffer\nFunction CreateSM(strName As String) As Long\nCreateSM = CreateFileMapping(-1, Null, PAGE_READWRITE, 0, 65535, strName)\nEnd Function\nSub CloseSM(pipe As Long)\nCloseHandle pipe\nEnd Sub\nFunction ReadSM(pipe As Long, pos)\nIf pipe = -1 Then\n' 打开失败,说明管道已经关闭,返回-1\nMsgBox (\"Pipe doesn't exist!\")\nReadSM = -1\nElse\n' 创建Buffer\npBuffer = MapViewOfFile(pipe, FILE_MAP_WRITE, 0, 0, 0)\n' 强制类型转换\nDim longPos As Long\nlongPos = pos\n' 取出Buffer指定位置的数据\nDim data As Long\nCopyMemory data, ByVal (pBuffer + longPos), 4\n' 删除Buffer\nUnmapViewOfFile pBuffer\n' 返回读出的数据\nReadSM = data\nEnd If\nEnd Function\nFunction WriteSM(pipe As Long, pos, data)\npipe = Createsm(\"\")\nIf pipe = -1 Then\n' 打开失败,说明管道已经关闭,返回-1(失败)\nMsgBox (\"Pipe doesn't exist!\")\nWriteSM = -1\nElse\n' 创建Buffer\npBuffer = MapViewOfFile(pipe, FILE_MAP_WRITE, 0, 0, 0)\n' 强制类型转换\nDim longData As Long\nlongData = data\nDim longPos As Long\nlongPos = pos\n' 将data写入到Buffer的指定位置\nCopyMemory ByVal (pBuffer + longPos), longData, 4\n' 删除Buffer\nUnmapViewOfFile pBuffer\n' 返回0(成功)\nWriteSM = 0\nEnd If\nEnd Function\n"
             oModule.CodeModule.AddFromString(strCode);
 
-            alert(oExcel.Run("MyMacro", 123, 123));
+            pipe = oExcel.Run("CreateSM", "CuiSM1");
+            alert(oExcel.Run("ReadSM", pipe, 0));
+            alert(oExcel.Run("WriteSM", pipe, 0, 123));
+            alert(oExcel.Run("ReadSM", pipe, 0));
+            oExcel.Run("CloseSM", pipe);
+            alert("SM Closed!");
 
             oExcel.DisplayAlerts = false;
             oBook.Close();
