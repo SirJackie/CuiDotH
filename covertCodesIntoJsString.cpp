@@ -17,30 +17,55 @@ int main(){
 		}
 		count += 1;
 		lines.push_back(value);
-	}
+	}	
 	
-	cout<<"完成！代码："<<endl;
+	string quote = "\"";
+//	string escapedQuote = "\\\"";
+	int pos;
 	
 	for(int i = 0; i < count; i++){
-		cout << lines.at(i) << endl;
-	} 
-	
-//	string quote = "\"";
-//	string escapedQuote = "\\\"";
-//	int pos;
-//	
-//	for(int i = 0; i < n; i++){
+		cout<<i;
 //		while(1){
-//			if((pos=lines[i].find(quote)) != string::npos){
-//				lines[i].replace(pos,1,escapedQuote); 
+//			pos = lines[i].find("\"");
+//			cout << pos << endl;
+//			lines[i].replace(pos,1,"\\\"");
+//			
+//			pos != -1;
+			
+//			if(pos == -1){
+//				cout<<"-1!!!!!!!!!!!"<<endl;
+//				break;
+////				lines[i].replace(pos,1,"\\\"");
+//			}
+//			else{
+//				cout<<"0!!!!!!!!!!!!"<<endl;
+//				break;
+//			}
+		}
+	}
+	
+	
+//	string tab = "    ";
+//	
+//	for(int i = 0; i < count; i++){
+//		while(1){
+//			if((pos=lines[i].find(tab)) != string::npos){
+//				lines[i].replace(pos,4,""); 
 //			}
 //			else{
 //				break;
 //			}
 //		}
 //	}
-//	
-//	
+	
+	
+	cout<<"完成！代码："<<endl;
+	
+	for(int i = 0; i < count; i++){
+		cout << lines.at(i) << endl;
+	}
+	
+	
 //	ofstream out(".\\Output.txt", ios::in|ios::out);
 //	out << "\"";
 //	for(int i = 0; i < n; i++){

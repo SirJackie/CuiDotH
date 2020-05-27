@@ -8,29 +8,30 @@ Public Const WM_SETTEXT = &HC
 Public Const WM_USER = &H400
 Public Const GWL_WNDPROC = (-4)
 Public preWndProc As Long
-Public Declare Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function IsWindowVisible Lib "user32" (ByVal hwnd As Long) As Long
-Public Declare Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
-Public Declare Function SetfrmFocus Lib "user32" Alias "SetFocus" (ByVal hwnd As Long) As Long
-Public Declare Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
-Public Declare Function PostMessage Lib "user32" Alias "PostMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
-Public Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
-Public Declare Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
-Public Declare Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
-Public Declare Function SetWindowText Lib "user32" Alias "SetWindowTextA" (ByVal hwnd As Long, ByVal lpString As String) As Long
-Public Declare Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, ByVal lpsz2 As String) As Long
-Public Declare Function CreateFileMapping Lib "kernel32" Alias "CreateFileMappingA" (ByVal hFile As Long, lpFileMappigAttributes As Any, ByVal flProtect As Long, ByVal dwMaximumSizeHigh As Long, ByVal dwMaximumSizeLow As Long, ByVal lpName As String) As Long
-Public Declare Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
-Public Declare Function MapViewOfFile Lib "kernel32" (ByVal hFileMappingObject As Long, ByVal dwDesiredAccess As Long, ByVal dwFileOffsetHigh As Long, ByVal dwFileOffsetLow As Long, ByVal dwNumberOfBytesToMap As Long) As Long
-Public Declare Function UnmapViewOfFile Lib "kernel32" (lpBaseAddress As Any) As Long
-Public Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
-Public Declare Sub CopyMemoryToStr Lib "kernel32" Alias "RtlMoveMemory" (ByVal strDst As String, pScr As Long, ByVal length As Long)
-Public Declare Sub CopyMemoryStr Lib "kernel32" Alias "RtlMoveMemory" (strDst As Long, ByVal pScr As String, ByVal length As Long)
+Public Declare ptrSafe Function CallWindowProc Lib "user32" Alias "CallWindowProcA" (ByVal lpPrevWndFunc As Long, ByVal hwnd As Long, ByVal Msg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare ptrSafe Function IsWindowVisible Lib "user32" (ByVal hwnd As Long) As Long
+Public Declare ptrSafe Function ShowWindow Lib "user32" (ByVal hwnd As Long, ByVal nCmdShow As Long) As Long
+Public Declare ptrSafe Function SetfrmFocus Lib "user32" Alias "SetFocus" (ByVal hwnd As Long) As Long
+Public Declare ptrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As Long
+Public Declare ptrSafe Function PostMessage Lib "user32" Alias "PostMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByVal lParam As Long) As Long
+Public Declare ptrSafe Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwnd As Long, ByVal wMsg As Long, ByVal wParam As Long, lParam As Any) As Long
+Public Declare ptrSafe Function GetWindowLong Lib "user32" Alias "GetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long) As Long
+Public Declare ptrSafe Function SetWindowLong Lib "user32" Alias "SetWindowLongA" (ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+Public Declare ptrSafe Function SetWindowText Lib "user32" Alias "SetWindowTextA" (ByVal hwnd As Long, ByVal lpString As String) As Long
+Public Declare ptrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWnd1 As Long, ByVal hWnd2 As Long, ByVal lpsz1 As String, ByVal lpsz2 As String) As Long
+Public Declare ptrSafe Function CreateFileMapping Lib "kernel32" Alias "CreateFileMappingA" (ByVal hFile As Long, lpFileMappigAttributes As Any, ByVal flProtect As Long, ByVal dwMaximumSizeHigh As Long, ByVal dwMaximumSizeLow As Long, ByVal lpName As String) As Long
+Public Declare ptrSafe Function CloseHandle Lib "kernel32" (ByVal hObject As Long) As Long
+Public Declare ptrSafe Function MapViewOfFile Lib "kernel32" (ByVal hFileMappingObject As Long, ByVal dwDesiredAccess As Long, ByVal dwFileOffsetHigh As Long, ByVal dwFileOffsetLow As Long, ByVal dwNumberOfBytesToMap As Long) As Long
+Public Declare ptrSafe Function UnmapViewOfFile Lib "kernel32" (lpBaseAddress As Any) As Long
+Public Declare ptrSafe Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (Destination As Any, Source As Any, ByVal length As Long)
+Public Declare ptrSafe Sub CopyMemoryToStr Lib "kernel32" Alias "RtlMoveMemory" (ByVal strDst As String, pScr As Long, ByVal length As Long)
+Public Declare ptrSafe Sub CopyMemoryStr Lib "kernel32" Alias "RtlMoveMemory" (strDst As Long, ByVal pScr As String, ByVal length As Long)
 Public pipe As Long     ' 内存映射句柄
 Public pBuffer As Long  ' 内存映射Buffer
 
 Function CreateSM(strName As String) As Long
-    CreateSM = CreateFileMapping(-1, Null, PAGE_READWRITE, 0, 65535, strName)
+    ' CreateSM = CreateFileMapping(-1, Null, PAGE_READWRITE, 0, 65535, strName)
+    CreateSM = CreateFileMapping($FFFFFFFFFFFFFFFF, Null, PAGE_READWRITE, 0, 65535, strName)
 End Function
 
 Sub CloseSM(pipe As Long)
@@ -99,3 +100,24 @@ Function WriteSM(pipe As Long, pos, data)
     End If
     
 End Function
+
+Sub 按钮1_Click()
+
+    ' 创建管道
+    pipe = CreateSM("CuiSM1")
+    
+    ' 读取初始值
+    MsgBox (ReadSM(pipe, 0))
+    
+    ' 写入值123
+    MsgBox (WriteSM(pipe, 0, 123))
+    
+    ' 检查是否写入
+    MsgBox (ReadSM(pipe, 0))
+    
+    ' 关闭管道
+    CloseSM (pipe)
+    MsgBox ("SM Closed!")
+    
+End Sub
+
