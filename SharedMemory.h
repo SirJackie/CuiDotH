@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <string.h>
 
-HANDLE CreateSharedMemory(char* name,int len){
+HANDLE CreateSM(char* name,int len){
     return CreateFileMapping(INVALID_HANDLE_VALUE,
                              NULL,
                              PAGE_READWRITE,
@@ -13,11 +13,11 @@ HANDLE CreateSharedMemory(char* name,int len){
                              name);
 }
 
-void DestroySharedMemory(char* name){	
+void CloseSM(char* name){
     CloseHandle(OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name));
 }
 
-BOOL CheckIfSharedMemoryExist(char* name){
+BOOL CheckSM(char* name){
 	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
 	
     if(NULL == pipe){
@@ -26,6 +26,28 @@ BOOL CheckIfSharedMemoryExist(char* name){
     else{
         return TRUE;
     }
+}
+
+int ReadSM(char* name, int position){
+	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
+	
+    LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+    
+    int returnValue = ((int*)pBuffer)[position];
+    
+    UnmapViewOfFile(pBuffer);
+    
+    return returnValue;
+}
+
+void WriteSM(char* name, int position, int value){
+	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
+	
+    LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+    
+    ((int*)pBuffer)[position] = value;
+    
+    UnmapViewOfFile(pBuffer);
 }
 
 void WriteSharedMemory(char* name, int* data, int len){
@@ -56,26 +78,6 @@ void ReadSharedMemory(char* name, int* buffer, int len){
     UnmapViewOfFile(pBuffer);
 }
 
-int ReadPieceOfSharedMemory(char* name, int position){
-	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
-	
-    LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-    
-    int returnValue = ((int*)pBuffer)[position];
-    
-    UnmapViewOfFile(pBuffer);
-    
-    return returnValue;
-}
 
-void WritePieceOfSharedMemory(char* name, int position, int value){
-	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
-	
-    LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-    
-    ((int*)pBuffer)[position] = value;
-    
-    UnmapViewOfFile(pBuffer);
-}
 
 #endif
