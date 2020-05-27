@@ -1,0 +1,11 @@
+VB 进程间通讯操作类_VBScript_新兴网络
+http://www.newxing.com/Tech/WebDevelop/VBScript/528.html
+
+VBS中调用Windows_API_Win32_API
+http://www.360doc.com/document/19/0720/19/65428156_850000559.shtml
+
+EXCEL VBA中声明32位和64位兼容的API函数的方法 | Excel实例教学网 微信公众号EXCEL880
+http://excel880.com/blog/archives/2697
+
+关于CreateFileMapping 64位版本如何设置参数【delphi吧】_百度贴吧
+https://tieba.baidu.com/p/2172526428?red_tag=3551283350
