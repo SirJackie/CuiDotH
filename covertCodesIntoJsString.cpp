@@ -2,6 +2,7 @@
 #include <fstream> 
 #include <string>
 #include <vector>
+#include <stack>
 using namespace std;
 
 int main(){
@@ -22,16 +23,29 @@ int main(){
 	string quote = "\"";
 	string escapedQuote = "\\\"";
 	int pos;
+	stack<int> s;
 	
 	for(int i = 0; i < count; i++){
 		cout<<i<<endl;
 		
-		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-		cout<<"foundquotestate"<<lines[i].find(quote);
+		while(1){
+			pos = lines[i].find(quote);
+			if(pos == -1){
+				break;
+			}
+			s.push(pos);
+			lines[i].replace(pos, 1, "QUOTE_NEED_TO_ESCAPE");
+		}
+		
+		cout<<lines[i]<<endl;
+		
+		
+//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
+//		cout<<"foundquotestate"<<;
 	}
 	
 	
