@@ -2,10 +2,14 @@
 #include <fstream> 
 #include <string>
 #include <vector>
-#include <stack>
 using namespace std;
 
 int main(){
+	
+	/*
+	** Input 
+	*/
+	
 	cout << "输入你的代码（输入*****来结束）" << endl; 
 	
 	int count = 0;
@@ -20,33 +24,21 @@ int main(){
 		lines.push_back(value);
 	}	
 	
-	string quote = "\"";
-	string escapedQuote = "\\\"";
 	int pos;
-	// stack<int> s;
+	
+	/*
+	** Escape Quote
+	*/ 
 	
 	for(int i = 0; i < count; i++){
-		cout<<i<<endl;
 		
 		while(1){
-			pos = lines[i].find(quote);
+			pos = lines[i].find("\"");
 			if(pos == -1){
 				break;
 			}
-			// s.push(pos);
 			lines[i].replace(pos, 1, "QUOTE_NEED_TO_ESCAPE");
 		}
-		
-		cout<<lines[i]<<endl;
-		
-//		while(!s.empty())
-//		{
-//			cout << s.top() << endl;
-//			lines[i].replace(lines[i].at(s.top()), lines[i].at(s.top()) + 20, "\\\"");
-//			cout << "lines[i].replace(lines[i].at(" << s.top() <<endl;
-//			s.pop();
-//			cout<<lines[i]<<endl;
-//		}
 
 		while(1){
 			pos = lines[i].find("QUOTE_NEED_TO_ESCAPE");
@@ -55,26 +47,55 @@ int main(){
 			}
 			lines[i].replace(pos, 20, "\\\"");
 		}
-		
-		cout<<lines[i]<<endl;
 	}
 	
-	
-	cout<<"完成！代码："<<endl;
+	/*
+	** Escape Tab
+	*/ 
 	
 	for(int i = 0; i < count; i++){
-		cout << lines.at(i) << endl;
+		
+		while(1){
+			pos = lines[i].find("    ");
+			if(pos == -1){
+				break;
+			}
+			lines[i].replace(pos, 4, "TAB_NEED_TO_ESCAPE");
+		}
+
+		while(1){
+			pos = lines[i].find("TAB_NEED_TO_ESCAPE");
+			if(pos == -1){
+				break;
+			}
+			lines[i].replace(pos, 18, "");
+		}
 	}
 	
+	/*
+	** Create \n
+	*/
 	
-//	ofstream out(".\\Output.txt", ios::in|ios::out);
-//	out << "\"";
-//	for(int i = 0; i < n; i++){
-//		out << lines[n];
-//	}
-//	out << "\"";
-//	
-//	out << "Second Line" << endl;
-//	out << "Third  Line" << endl;
-//	out.close();
+	string finalString = "var code = \"";
+	
+	for(int i = 0; i < lines.size(); i++){
+		finalString += lines.at(i);
+		finalString += "\\n";
+	}
+	
+	finalString += "\"";
+	
+	/*
+	** Output and Save into File
+	*/
+	
+	cout << "完成！代码：" << endl << finalString << endl;
+	
+	ofstream out("ConvertedCode.js");
+	out << finalString <<endl;
+	out.close();
+	
+	cout << "成功保存到ConvertedCode.js" <<endl;
+	
+	getchar();
 }
