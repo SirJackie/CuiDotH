@@ -23,7 +23,7 @@ int main(){
 	string quote = "\"";
 	string escapedQuote = "\\\"";
 	int pos;
-	stack<int> s;
+	// stack<int> s;
 	
 	for(int i = 0; i < count; i++){
 		cout<<i<<endl;
@@ -33,34 +33,31 @@ int main(){
 			if(pos == -1){
 				break;
 			}
-			s.push(pos);
+			// s.push(pos);
 			lines[i].replace(pos, 1, "QUOTE_NEED_TO_ESCAPE");
 		}
 		
 		cout<<lines[i]<<endl;
 		
-		
-//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-//		lines[i].replace(lines[i].find(quote),1,escapedQuote);
-//		cout<<"foundquotestate"<<;
-	}
-	
-	
-//	string tab = "    ";
-//	
-//	for(int i = 0; i < count; i++){
-//		while(1){
-//			if((pos=lines[i].find(tab)) != string::npos){
-//				lines[i].replace(pos,4,""); 
-//			}
-//			else{
-//				break;
-//			}
+//		while(!s.empty())
+//		{
+//			cout << s.top() << endl;
+//			lines[i].replace(lines[i].at(s.top()), lines[i].at(s.top()) + 20, "\\\"");
+//			cout << "lines[i].replace(lines[i].at(" << s.top() <<endl;
+//			s.pop();
+//			cout<<lines[i]<<endl;
 //		}
-//	}
+
+		while(1){
+			pos = lines[i].find("QUOTE_NEED_TO_ESCAPE");
+			if(pos == -1){
+				break;
+			}
+			lines[i].replace(pos, 20, "\\\"");
+		}
+		
+		cout<<lines[i]<<endl;
+	}
 	
 	
 	cout<<"Íê³É£¡´úÂë£º"<<endl;
