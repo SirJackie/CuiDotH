@@ -15,20 +15,7 @@
             ** Tool Functions
             */
 
-            function RunInBackground(command){
-                var ws = new ActiveXObject("WScript.Shell");
-                return ws.Run(command,   //Command
-                              0,         //showWindowOrNot
-                              true);     //waitOnReturnOrNot
-            }
-
-            function ReadSharedMemory(name, position){
-                return RunInBackground(".\\cui.exe READSM " + name + " " + position);
-            }
-
-            function WriteSharedMemory(name, position, value){
-                RunInBackground(".\\cui.exe WRITESM " + name + " " + position + " " + value);
-            }
+            
 
             /*
             ** Drawing Functions
