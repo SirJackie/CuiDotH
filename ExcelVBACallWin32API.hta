@@ -17,9 +17,7 @@
                 "oModule"     : null,
                 "RunProgram"  : function(command){
                     var ws = new ActiveXObject("WScript.Shell");
-                    return ws.Run(command,   //Command
-                                0,         //showWindowOrNot
-                                true);     //waitOnReturnOrNot
+                    return ws.Run(command, 0, true);
                 },
                 "Init"        : function(CuiAddress, SMName){
                     this.CuiAddress = CuiAddress;
@@ -30,6 +28,7 @@
                     catch(e){
                         alert("你的设备并没有安装Excel，无法使用Excel VBA加速，将使用兼容模式打开");
                         this.useVBA = false;
+                        return;
                     }
                     
                     this.oBook = this.oExcel.Workbooks.Add();
@@ -44,6 +43,7 @@
                         return this.oExcel.Run("ReadSM", this.SMName, position);
                     }
                     else{
+                        alert("this.RunProgram(" + this.CuiAddress + " READSM " + this.SMName + " " + position + ")");
                         return this.RunProgram(this.CuiAddress + " READSM " + this.SMName + " " + position);
                     }
                     
@@ -53,20 +53,25 @@
                         this.oExcel.Run("WriteSM", this.SMName, position, value);
                     }
                     else{
+                        alert("this.RunProgram(" + this.CuiAddress + " WRITESM " + name + " " + position + " " + value + ")");
                         this.RunProgram(this.CuiAddress + " WRITESM " + name + " " + position + " " + value);
                     }
                     
                 },
                 "CloseSM"     : function(){
-                    SharedMemory.oExcel.Run("CloseSMUseString", this.SMName);
+                    if(this.useVBA){
+                        SharedMemory.oExcel.Run("CloseSMUseString", this.SMName);
+                    }
                 },
                 "CloseObject" : function(){
-                    this.oBook.Close();
-                    this.oExcel.Quit();
+                    if(this.useVBA){
+                        this.oBook.Close();
+                        this.oExcel.Quit();
+                    }
                 }
             }
 
-            SharedMemory.Init(".\\cui.cpp", "CUiSM1");
+            SharedMemory.Init(".\\cui.exe", "CuiSM1");
 
             alert(SharedMemory.ReadSM(0));
             SharedMemory.WriteSM(0, 456);

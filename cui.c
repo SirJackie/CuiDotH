@@ -19,42 +19,33 @@ void CuiInit(int argc, char** argv){
 	}
 	
 	if(strcmp(argv[1], "READSM") == 0){
-		if(!CheckIfSharedMemoryExist(argv[2])){
-			//Shared Memory Doesn't Even Exist
-			exit(-1);
-		}
-		exit(ReadPieceOfSharedMemory(argv[2], atoi(argv[3])));
+		exit(ReadSM(argv[2], atoi(argv[3])));
 	}
 	
 	if(strcmp(argv[1], "WRITESM") == 0){
-		if(!CheckIfSharedMemoryExist(argv[2])){
-			//Shared Memory Doesn't Even Exist
-			exit(-1);
-		}
-		printf("here!");
-		WritePieceOfSharedMemory(argv[2], atoi(argv[3]), atoi(argv[4]));
+		WriteSM(argv[2], atoi(argv[3]), atoi(argv[4]));
 		exit(0);
 	}
 }
 
 void CuiExit(){
-	WritePieceOfSharedMemory(SMNAME, 0,  -1);
+	WriteSM(SMNAME, 0,  -1);
 }
 
 void CuiDrawLine(int x1, int y1, int x2, int y2){
-	WritePieceOfSharedMemory(SMNAME, 1, x1);
-	WritePieceOfSharedMemory(SMNAME, 2, y1);
-	WritePieceOfSharedMemory(SMNAME, 3, x2);
-	WritePieceOfSharedMemory(SMNAME, 4, y2);
-	WritePieceOfSharedMemory(SMNAME, 0,  1); //activate DrawLine() inside Client.hta
-	while(ReadPieceOfSharedMemory(SMNAME, 0) != 0){
+	WriteSM(SMNAME, 1, x1);
+	WriteSM(SMNAME, 2, y1);
+	WriteSM(SMNAME, 3, x2);
+	WriteSM(SMNAME, 4, y2);
+	WriteSM(SMNAME, 0,  1); //activate DrawLine() inside Client.hta
+	while(ReadSM(SMNAME, 0) != 0){
 		;
 	}
 }
 BOOL CuiCheckHeartBeat(){
 	int count = 0;
-	WritePieceOfSharedMemory(SMNAME, 0,  -2); //activate heartbeat reporter inside Client.hta
-	while(ReadPieceOfSharedMemory(SMNAME, 0) != 0){
+	WriteSM(SMNAME, 0,  -2); //activate heartbeat reporter inside Client.hta
+	while(ReadSM(SMNAME, 0) != 0){
 		Sleep(1);
 		count += 1;
 		if(count > 500){
@@ -67,8 +58,8 @@ BOOL CuiCheckHeartBeat(){
 int main(int argc, char** argv){
 	CuiInit(argc, argv);    //For Cmd Call
 	
-	CreateSharedMemory(SMNAME, 100 * sizeof(int));
-	WritePieceOfSharedMemory(SMNAME, 0, 0);       //initialize
+	CreateSM(SMNAME, 65535);
+	WriteSM(SMNAME, 0, 0);       //initialize
 
 	system("start .\\Client.hta");
 	
