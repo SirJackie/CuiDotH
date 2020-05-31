@@ -54,13 +54,13 @@
                     this.useVBA = true;
                 },
                 "ReadSM"      : function(position){
-                    if(this.useVBA){
-                        return this.oExcel.Run("ReadSM", this.SMName, position);
-                    }
-                    else{
+                    // if(this.useVBA){
+                    //     return this.oExcel.Run("ReadSM", this.SMName, position);
+                    // }
+                    // else{
                         // alert("this.RunProgram(" + this.CuiAddress + " READSM " + this.SMName + " " + position + ")");
                         return this.RunProgram(this.CuiAddress + " READSM " + this.SMName + " " + position);
-                    }
+                    // }
                     
                 },
                 "WriteSM"     : function(position, value){
