@@ -6,7 +6,7 @@
 #define SMNAME  "CuiSM1"
 #define SMLEN   100
 
-void CuiInit(int argc, char** argv){
+void CuiCheckCommandLine(int argc, char** argv){
 	//argv[0] = exe address;
 	//argv[1] = command;
 	//argv[2] = command argument 1;
@@ -26,6 +26,13 @@ void CuiInit(int argc, char** argv){
 		WriteSM(argv[2], atoi(argv[3]), atoi(argv[4]));
 		exit(0);
 	}
+}
+
+void CuiInit(int argc, char** argv){
+	CuiCheckCommandLine(argc, argv);
+	CreateSM(SMNAME, 65535);
+	WriteSM(SMNAME, 0, 0);       //initialize
+	system("start .\\Client.hta");
 }
 
 void CuiExit(){
@@ -48,7 +55,7 @@ BOOL CuiCheckHeartBeat(){
 	while(ReadSM(SMNAME, 0) != 0){
 		Sleep(1);
 		count += 1;
-		if(count > 500){
+		if(count > 50){
 			return FALSE;
 		}
 	}
@@ -57,11 +64,6 @@ BOOL CuiCheckHeartBeat(){
 
 int main(int argc, char** argv){
 	CuiInit(argc, argv);    //For Cmd Call
-	
-	CreateSM(SMNAME, 65535);
-	WriteSM(SMNAME, 0, 0);       //initialize
-
-	system("start .\\Client.hta");
 	
 	CuiDrawLine(0, 0, 400, 400);
 	printf("Drew!"); 
