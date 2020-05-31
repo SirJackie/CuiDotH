@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Windows.h>
-#include "SharedMemory.h"
+#include ".\\SharedMemory\\SharedMemory.h"
 
 #define SMNAME  "CuiSM1"
 #define SMLEN   100
