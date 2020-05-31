@@ -43,7 +43,7 @@
                         return this.oExcel.Run("ReadSM", this.SMName, position);
                     }
                     else{
-                        alert("this.RunProgram(" + this.CuiAddress + " READSM " + this.SMName + " " + position + ")");
+                        // alert("this.RunProgram(" + this.CuiAddress + " READSM " + this.SMName + " " + position + ")");
                         return this.RunProgram(this.CuiAddress + " READSM " + this.SMName + " " + position);
                     }
                     
@@ -53,7 +53,7 @@
                         this.oExcel.Run("WriteSM", this.SMName, position, value);
                     }
                     else{
-                        alert("this.RunProgram(" + this.CuiAddress + " WRITESM " + name + " " + position + " " + value + ")");
+                        // alert("this.RunProgram(" + this.CuiAddress + " WRITESM " + name + " " + position + " " + value + ")");
                         this.RunProgram(this.CuiAddress + " WRITESM " + name + " " + position + " " + value);
                     }
                     
