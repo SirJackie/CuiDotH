@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include <string.h>
+#include <stdio.h> 
 
 HANDLE CreateSM(char* name,int len){
     return CreateFileMapping(INVALID_HANDLE_VALUE,
@@ -29,8 +30,7 @@ BOOL CheckSM(char* name){
 }
 
 int ReadSM(char* name, int position){
-//	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
-
+    
 	HANDLE pipe = CreateSM(name, 65535);
 	
     LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
@@ -43,13 +43,16 @@ int ReadSM(char* name, int position){
 }
 
 void WriteSM(char* name, int position, int value){
-//	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
+	
+	
 
-	HANDLE pipe = CreateSM(name, 65535);
+	HANDLE pipe = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, name);
 	
     LPVOID pBuffer = MapViewOfFile(pipe, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     
     ((int*)pBuffer)[position] = value;
+    
+    printf("value: %d \n", value); 
     
     UnmapViewOfFile(pBuffer);
 }

@@ -55,7 +55,7 @@ BOOL CuiCheckHeartBeat(){
 	while(ReadSM(SMNAME, 0) != 0){
 		Sleep(1);
 		count += 1;
-		if(count > 50){
+		if(count > 500){
 			return FALSE;
 		}
 	}

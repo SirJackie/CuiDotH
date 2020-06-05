@@ -1,3 +1,2 @@
 buglist
-SharedMemory兼容模式无法正常写入
 SharedMemory ExcelVBA模式无法正常读取
