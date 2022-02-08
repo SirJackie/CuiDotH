@@ -45,6 +45,7 @@ void CuiDrawLine(int x1, int y1, int x2, int y2){
 	WriteSM(SMNAME, 3, x2);
 	WriteSM(SMNAME, 4, y2);
 	WriteSM(SMNAME, 0,  1); //activate DrawLine() inside Client.hta
+	printf("x1 %d y1 %d x2 %d y2 %d", x1, y1, x2, y2); 
 	while(ReadSM(SMNAME, 0) != 0){
 		;
 	}
